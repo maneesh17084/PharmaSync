@@ -1,6 +1,7 @@
 # PharmaSync — Wholesale Medical Store Inventory & Stock Management System
 
 Java 21 · Swing (FlatLaf) · JDBC · SQLite · JFreeChart · OpenPDF · JUnit 5
+Live Demo : https://pharmasync-kappa.vercel.app/demo
 
 A desktop application for a wholesale pharmaceutical distributor: medicine master data, batch-wise stock with
 manufacturing/expiry dates, FEFO (First Expiry, First Out) dispatch, supplier purchases, retailer sales with GST
