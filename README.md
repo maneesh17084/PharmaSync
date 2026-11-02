@@ -16,6 +16,14 @@ folder is the product website: features, screenshots, setup steps and a Download
 Vercel to serve that folder as a static site with no build step, so the Java project is ignored there. Every push
 to `main` redeploys it.
 
+**Live demo** (`public/demo/`, served at `/demo`): a browser version of the main workflows so visitors can try
+PharmaSync before downloading: dashboard, stock alerts, new sales order with FEFO dispatch and GST preview, invoices
+with printable tax invoice and payments, customers, medicines, batches and receiving stock. `core.js` is a port of
+the desktop business rules (FEFO allocation, half-up invoice maths, CGST/SGST vs IGST, partial payments, batch
+validation) on the same sample data; `app.js` is the interface. It runs entirely in the browser and keeps its data in
+`localStorage` ("Reset demo" restores the sample data). Its rules are tested with `node --test site-tests/core.test.js`,
+which the Build workflow also runs.
+
 The Download button points at the latest GitHub Release. To publish a new version, push a tag:
 
 ```bat
