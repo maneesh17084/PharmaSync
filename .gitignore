@@ -1,0 +1,8 @@
+target/
+data/
+invoices/
+reports/
+*.log
+.idea/
+*.iml
+out/
