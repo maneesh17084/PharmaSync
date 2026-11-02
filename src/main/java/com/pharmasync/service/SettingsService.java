@@ -16,7 +16,7 @@ public class SettingsService {
     public static final String COMPANY_LICENSE = "company_license";
     public static final String COMPANY_STATE = "company_state";
 
-    /** Name shipped in schema.sql; while it (or a blank GSTIN) remains, documents are printed as samples. */
+    /** Name shipped in schema.sql; while it (or a blank GSTIN) remains, Settings asks for the real details. */
     public static final String DEMO_COMPANY_NAME = "PharmaSync Demo Pharma (SAMPLE COMPANY)";
 
     private final SettingsDao dao;
@@ -41,7 +41,7 @@ public class SettingsService {
                 "Set the company's state in Settings before billing (needed to choose CGST/SGST or IGST)"));
     }
 
-    /** False while the demo company details are still in place; such PDFs are marked as samples. */
+    /** False while the demo company details are still in place (Settings then shows a reminder). */
     public boolean isCompanyConfigured() {
         return !get(COMPANY_GSTIN).isBlank() && !get(COMPANY_NAME).isBlank()
                 && !get(COMPANY_NAME).equals(DEMO_COMPANY_NAME);

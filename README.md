@@ -59,8 +59,8 @@ In IntelliJ IDEA: *File → Open* → select `pom.xml`, then run `com.pharmasync
    password the first time.
 3. **Before printing real invoices**, open *Settings* and enter your company name, address, state, GSTIN and drug
    licence. The database ships with clearly labelled demo company details (*PharmaSync Demo Pharma (SAMPLE COMPANY)*,
-   no GSTIN), and until a real name and GSTIN are saved every PDF is stamped
-   **"SAMPLE - NOT A VALID TAX INVOICE"**. Customer and supplier GSTINs in the demo data are made up as well.
+   no GSTIN), which are printed on invoices until you replace them; Settings shows a reminder while they are in
+   place. Customer and supplier GSTINs in the demo data are made up as well.
 
 Databases created by an earlier version are upgraded automatically on start: new columns are added, invoices that
 were marked PAID get a matching payment entry, and unchanged old sample company details are replaced by the

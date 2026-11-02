@@ -235,8 +235,8 @@ CREATE TABLE IF NOT EXISTS settings (
     setting_value VARCHAR(255) NOT NULL
 );
 
--- Demo company details, deliberately labelled as samples. Until a real name and GSTIN are entered in
--- Settings, every PDF is stamped "SAMPLE - NOT A VALID TAX INVOICE".
+-- Demo company details, deliberately labelled as samples. Settings reminds the user to replace them
+-- with the real company name and GSTIN before printing invoices.
 INSERT OR IGNORE INTO settings (setting_key, setting_value) VALUES
     ('near_expiry_days', '90'),
     ('company_name', 'PharmaSync Demo Pharma (SAMPLE COMPANY)'),

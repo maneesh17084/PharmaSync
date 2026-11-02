@@ -875,7 +875,7 @@
     const taxRows = s.supplyType === 'INTER_STATE'
       ? '<div><span>IGST</span><span>' + plain(split.igst) + '</span></div>'
       : '<div><span>CGST</span><span>' + plain(split.cgst) + '</span></div><div><span>' + split.stateTaxName + '</span><span>' + plain(split.sgst) + '</span></div>';
-    return '<div class="invoice"><div class="sample">SAMPLE - NOT A VALID TAX INVOICE (demo data)</div>'
+    return '<div class="invoice">'
       + '<h4>' + esc(state.company.name) + '</h4><div class="co">' + esc(state.company.address) + ' &nbsp; State: ' + esc(C.stateLabel(state.company.state)) + '</div>'
       + '<div class="title">TAX INVOICE</div><div class="blocks"><div><b>Bill To</b><br>' + esc(c.name) + '<br>' + esc(c.city) + '<br>State: '
       + esc(C.stateLabel(c.state)) + '<br>GSTIN: ' + esc(c.gstin || '-') + '</div><div><b>Invoice</b><br>Invoice No: ' + esc(s.invoiceNo)

@@ -83,8 +83,8 @@ public class SettingsPanel extends JPanel implements Refreshable {
             state.setSelectedItem(IndianState.ofCode(s.get(SettingsService.COMPANY_STATE)));
             sampleWarning.setText((Boolean) data[2] ? ""
 
-                    : "These are demo company details. Enter your real company name and GSTIN; until then every "
-                    + "PDF is marked SAMPLE.");
+                    : "These are demo company details. Enter your real company name and GSTIN before printing "
+                    + "invoices for customers.");
             db.setText("  SQLite database file: " + DatabaseManager.config().getFile());
         });
     }

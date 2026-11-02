@@ -44,7 +44,6 @@ public class InvoicePdfGenerator {
     private static final Font SMALL = new Font(Font.HELVETICA, 8, Font.NORMAL, Color.DARK_GRAY);
     private static final Font HEADER = new Font(Font.HELVETICA, 8, Font.BOLD, Color.WHITE);
     private static final Color HEADER_BG = new Color(0x1F, 0x4E, 0x79);
-    private static final Font SAMPLE = new Font(Font.HELVETICA, 10, Font.BOLD, new Color(0xB0, 0x20, 0x20));
 
     private final SettingsService settings;
 
@@ -160,13 +159,6 @@ public class InvoicePdfGenerator {
     }
 
     private void addCompanyHeader(Document doc, String title) throws DocumentException {
-        if (!settings.isCompanyConfigured()) {
-            Paragraph sample = new Paragraph("SAMPLE - NOT A VALID TAX INVOICE. Demo company details: enter your "
-                    + "company name and GSTIN in Settings.", SAMPLE);
-            sample.setAlignment(Element.ALIGN_CENTER);
-            sample.setSpacingAfter(6);
-            doc.add(sample);
-        }
         Paragraph name = new Paragraph(settings.get(SettingsService.COMPANY_NAME), TITLE);
         doc.add(name);
         IndianState state = IndianState.ofCode(settings.get(SettingsService.COMPANY_STATE));
