@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PharmaSync - Wholesale pharmacy inventory &amp; GST billing</title>
+<meta name="description" content="PharmaSync is a desktop app for wholesale pharmaceutical distributors: batch-wise stock with FEFO dispatch, expiry alerts, GST invoices with CGST/SGST or IGST, customer payments, reports and a full audit trail.">
+<meta name="theme-color" content="#0B1220">
+<meta property="og:title" content="PharmaSync">
+<meta property="og:description" content="Inventory, GST billing and expiry control for pharmaceutical wholesalers.">
+<meta property="og:image" content="/assets/screens/dashboard.webp">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+<link rel="apple-touch-icon" href="/assets/app-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy-950: #070D1A;
+    --navy-900: #0B1220;
+    --navy-800: #0F172A;
+    --teal: #14B8A6;
+    --teal-dark: #0D9488;
+    --cyan: #22D3EE;
+    --indigo: #6366F1;
+    --bg: #F6F8FB;
+    --surface: #FFFFFF;
+    --border: #E3E8EF;
+    --text: #0F172A;
+    --muted: #5B6B82;
+    --shadow: 0 1px 2px rgba(15, 23, 42, .06), 0 12px 32px -12px rgba(15, 23, 42, .18);
+    --radius: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B1220;
+      --surface: #111A2B;
+      --border: #1F2A3D;
+      --text: #E6EDF6;
+      --muted: #94A3B8;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 16px 40px -16px rgba(0, 0, 0, .6);
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.6 Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---- nav ---- */
+  .nav {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(7, 13, 26, .78); backdrop-filter: saturate(160%) blur(14px);
+    border-bottom: 1px solid rgba(148, 163, 184, .12);
+  }
+  .nav .wrap { display: flex; align-items: center; gap: 28px; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-weight: 700; font-size: 18px; }
+  .brand img { width: 30px; height: 30px; }
+  .brand span b { color: var(--teal); font-weight: 700; }
+  .nav nav { display: flex; gap: 22px; margin-left: auto; }
+  .nav nav a { color: #CBD5E1; text-decoration: none; font-size: 14.5px; font-weight: 500; }
+  .nav nav a:hover { color: #fff; }
+
+  /* ---- buttons ---- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border-radius: 12px;
+    font-weight: 600; font-size: 15.5px; text-decoration: none; transition: transform .15s, box-shadow .15s, background .15s;
+  }
+  .btn svg { width: 18px; height: 18px; }
+  .btn-primary { background: linear-gradient(135deg, var(--teal), var(--teal-dark)); color: #fff;
+    box-shadow: 0 10px 30px -10px rgba(20, 184, 166, .7); }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 14px 34px -10px rgba(20, 184, 166, .85); }
+  .btn-ghost { color: #E2E8F0; border: 1px solid rgba(148, 163, 184, .35); }
+  .btn-ghost:hover { background: rgba(148, 163, 184, .12); }
+  .btn-small { padding: 8px 14px; font-size: 14px; border-radius: 10px; }
+
+  /* ---- hero ---- */
+  .hero {
+    position: relative; overflow: hidden; color: #fff;
+    background:
+      radial-gradient(900px 500px at 85% -10%, rgba(34, 211, 238, .18), transparent 60%),
+      radial-gradient(800px 600px at 0% 110%, rgba(20, 184, 166, .22), transparent 60%),
+      linear-gradient(160deg, var(--navy-950), var(--navy-800) 45%, #0B3B3F);
+    padding: 72px 0 0;
+  }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 40px; align-items: center; }
+  /* Let grid children shrink below their images' natural width on small screens. */
+  .hero-grid > *, .tour > *, .features > *, .steps > *, .stats > * { min-width: 0; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px;
+    background: rgba(20, 184, 166, .14); border: 1px solid rgba(45, 212, 191, .35); color: #5EEAD4;
+    font-size: 13px; font-weight: 600; letter-spacing: .2px;
+  }
+  .hero h1 { font-size: clamp(36px, 5.2vw, 58px); line-height: 1.06; letter-spacing: -1.5px; margin: 18px 0 18px; font-weight: 800; }
+  .hero h1 em { font-style: normal; background: linear-gradient(90deg, var(--teal), var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p.lead { font-size: 18.5px; color: #B6C3D4; max-width: 560px; margin: 0 0 30px; }
+  .hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .hero .note { margin-top: 14px; font-size: 13.5px; color: #8A9BB2; }
+  .hero-logo { justify-self: center; width: min(420px, 90%); filter: drop-shadow(0 30px 60px rgba(34, 211, 238, .25)); }
+  .shot-frame {
+    margin: 64px auto 0; max-width: 1080px; border-radius: 16px 16px 0 0; overflow: hidden;
+    border: 1px solid rgba(148, 163, 184, .25); border-bottom: 0;
+    box-shadow: 0 -10px 80px -20px rgba(34, 211, 238, .35), 0 40px 80px -30px rgba(0, 0, 0, .8);
+    background: #0F172A;
+  }
+  .shot-toggle { display: flex; justify-content: center; gap: 6px; margin-top: 40px; }
+  .seg { display: inline-flex; padding: 4px; border-radius: 12px; background: rgba(148, 163, 184, .14); border: 1px solid rgba(148, 163, 184, .2); }
+  .seg button {
+    font: 600 13.5px Inter, sans-serif; color: #CBD5E1; background: transparent; border: 0; padding: 7px 14px;
+    border-radius: 9px; cursor: pointer;
+  }
+  .seg button[aria-pressed="true"] { background: #fff; color: var(--navy-800); }
+
+  /* ---- sections ---- */
+  section { padding: 96px 0; }
+  .section-head { text-align: center; max-width: 720px; margin: 0 auto 52px; }
+  .kicker { color: var(--teal-dark); font-weight: 700; font-size: 13.5px; letter-spacing: 1.4px; text-transform: uppercase; }
+  .section-head h2 { font-size: clamp(28px, 3.6vw, 40px); letter-spacing: -.8px; line-height: 1.15; margin: 10px 0 14px; }
+  .section-head p { color: var(--muted); font-size: 17.5px; margin: 0; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: -1px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
+  .stat b { display: block; font-size: 28px; letter-spacing: -.5px; }
+  .stat span { color: var(--muted); font-size: 14.5px; }
+
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px;
+    box-shadow: var(--shadow); transition: transform .2s, border-color .2s;
+  }
+  .card:hover { transform: translateY(-3px); border-color: rgba(20, 184, 166, .45); }
+  .icon {
+    width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center; margin-bottom: 16px;
+    background: rgba(20, 184, 166, .12); color: var(--teal-dark);
+  }
+  .icon.indigo { background: rgba(99, 102, 241, .12); color: var(--indigo); }
+  .icon.amber { background: rgba(245, 158, 11, .14); color: #B45309; }
+  .icon.red { background: rgba(239, 68, 68, .12); color: #DC2626; }
+  .icon.cyan { background: rgba(34, 211, 238, .14); color: #0891B2; }
+  .icon svg { width: 23px; height: 23px; }
+  .card h3 { margin: 0 0 8px; font-size: 18px; letter-spacing: -.2px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15.2px; }
+
+  .tour { display: grid; grid-template-columns: 300px 1fr; gap: 28px; align-items: start; }
+  .tabs { display: flex; flex-direction: column; gap: 8px; }
+  .tab {
+    text-align: left; font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px 16px; cursor: pointer; transition: border-color .15s, box-shadow .15s;
+  }
+  .tab strong { display: block; font-size: 15.5px; }
+  .tab span { color: var(--muted); font-size: 14px; }
+  .tab[aria-selected="true"] { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(20, 184, 166, .18); }
+  .tour-shot { border-radius: 14px; overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); background: var(--surface); }
+
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; counter-reset: step; }
+  .step { position: relative; padding: 26px 22px 22px; }
+  .step::before {
+    counter-increment: step; content: counter(step); position: absolute; top: -16px; left: 22px;
+    width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; font-weight: 700; color: #fff;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  }
+  .step h3 { font-size: 16.5px; margin: 6px 0 6px; }
+  .step p { margin: 0; color: var(--muted); font-size: 14.8px; }
+  code, pre {
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 13.5px;
+    background: rgba(148, 163, 184, .14); border-radius: 6px; padding: 2px 6px;
+  }
+  .cta-band {
+    border-radius: 24px; padding: 48px; color: #fff; display: flex; align-items: center; gap: 32px; flex-wrap: wrap;
+    background: radial-gradient(600px 300px at 100% 0%, rgba(34, 211, 238, .25), transparent 60%),
+      linear-gradient(135deg, var(--navy-800), #0B3B3F);
+  }
+  .cta-band h2 { margin: 0 0 6px; font-size: 30px; letter-spacing: -.6px; }
+  .cta-band p { margin: 0; color: #B6C3D4; }
+  .cta-band .ctas { margin-left: auto; display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .stack { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .chip { padding: 8px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); font-size: 14px; font-weight: 500; }
+
+  footer { border-top: 1px solid var(--border); padding: 34px 0 44px; color: var(--muted); font-size: 14px; }
+  footer .wrap { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  footer .brand { color: var(--text); font-size: 16px; }
+  footer nav { margin-left: auto; display: flex; gap: 18px; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--text); }
+
+  @media (max-width: 960px) {
+    .hero-grid { grid-template-columns: minmax(0, 1fr); text-align: center; }
+    .nav .wrap { gap: 14px; }
+    .hero p.lead { margin-left: auto; margin-right: auto; }
+    .hero .ctas { justify-content: center; }
+    .hero-logo { width: min(300px, 70%); grid-row: 1; }
+    .features { grid-template-columns: 1fr 1fr; }
+    .tour { grid-template-columns: minmax(0, 1fr); }
+    .tabs { flex-direction: row; overflow-x: auto; padding-bottom: 4px; }
+    .tab { flex: 0 0 210px; }
+    .steps, .stats { grid-template-columns: 1fr 1fr; row-gap: 30px; }
+    .nav nav a:not(.keep) { display: none; }
+  }
+  @media (max-width: 600px) {
+    section { padding: 72px 0; }
+    .wrap { padding: 0 16px; }
+    .features, .steps, .stats { grid-template-columns: 1fr; }
+    .cta-band { padding: 32px 24px; }
+    .cta-band .ctas { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="/assets/app-icon.png" alt=""><span>Pharma<b>Sync</b></span></a>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#tour">Screens</a>
+      <a href="#get-started">Get started</a>
+      <a class="keep" href="https://github.com/maneesh17084/PharmaSync">GitHub</a>
+    </nav>
+    <a class="btn btn-primary btn-small" href="https://github.com/maneesh17084/PharmaSync/releases/latest/download/pharmasync.jar">Download</a>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow">Desktop app for pharmaceutical wholesalers</span>
+          <h1>Stock, expiry and GST billing, <em>in sync.</em></h1>
+          <p class="lead">PharmaSync keeps batch-wise stock, dispatches by First-Expiry-First-Out, flags expiring and low stock,
+            and prints GST invoices with CGST/SGST or IGST worked out from the place of supply.</p>
+          <div class="ctas">
+            <a class="btn btn-primary" href="https://github.com/maneesh17084/PharmaSync/releases/latest/download/pharmasync.jar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download PharmaSync
+            </a>
+            <a class="btn btn-ghost" href="https://github.com/maneesh17084/PharmaSync">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>
+              View source
+            </a>
+          </div>
+          <p class="note">Windows, macOS and Linux &middot; needs Java 21 &middot; free and open source</p>
+        </div>
+        <img class="hero-logo" src="/assets/logo-mark.png" alt="PharmaSync logo">
+      </div>
+
+      <div class="shot-toggle">
+        <div class="seg" role="group" aria-label="Screenshot theme">
+          <button type="button" data-shot="light" aria-pressed="true">Light</button>
+          <button type="button" data-shot="dark" aria-pressed="false">Dark</button>
+        </div>
+      </div>
+      <div class="shot-frame">
+        <img id="hero-shot" src="/assets/screens/dashboard.webp" width="1424" height="837"
+             alt="PharmaSync dashboard with sales, receivables, stock and expiry tiles and sales charts">
+      </div>
+    </div>
+  </div>
+
+  <section style="padding-top: 56px">
+    <div class="wrap">
+      <div class="stats">
+        <div class="stat"><b>FEFO</b><span>Batches dispatched first-expiry-first-out, automatically</span></div>
+        <div class="stat"><b>GST-ready</b><span>CGST + SGST/UTGST or IGST by place of supply</span></div>
+        <div class="stat"><b>12 reports</b><span>Inventory, expiry, sales, payments, CSV export</span></div>
+        <div class="stat"><b>Offline</b><span>Single SQLite file, no server to install</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" style="padding-top: 24px">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="kicker">Features</div>
+        <h2>Everything a medical distributor runs on</h2>
+        <p>From the goods-received note to the tax invoice and the payment that settles it, every step updates stock and leaves an audit trail.</p>
+      </div>
+      <div class="features">
+        <article class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div>
+          <h3>Batch-wise stock &amp; FEFO</h3>
+          <p>Every batch keeps its own mfg/expiry date, cost and MRP. Orders draw from the batch that expires first and spill over to the next one.</p>
+        </article>
+        <article class="card">
+          <div class="icon amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <h3>Expiry &amp; low-stock alerts</h3>
+          <p>Near-expiry and expired batches are flagged and blocked from sale. Low stock comes with a suggested order and a one-click purchase order.</p>
+        </article>
+        <article class="card">
+          <div class="icon indigo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></div>
+          <h3>GST tax invoices</h3>
+          <p>PDF invoices with place of supply and the right split: CGST + SGST (or UTGST) within the state, IGST across states. GSTINs are validated.</p>
+        </article>
+        <article class="card">
+          <div class="icon cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/></svg></div>
+          <h3>Customer payments</h3>
+          <p>Record full, partial or later payments with mode and cheque/UTR reference. Balances, receivables and payment history stay exact.</p>
+        </article>
+        <article class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 16V5a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h2"/><path d="M15 9h4l3 3v4a1 1 0 0 1-1 1h-1"/><line x1="9" y1="17" x2="15" y2="17"/><circle cx="6.5" cy="17.5" r="2"/><circle cx="17.5" cy="17.5" r="2"/></svg></div>
+          <h3>Purchases &amp; suppliers</h3>
+          <p>Purchase orders, goods received with batch details, direct shipments and supplier payments, all posted to stock automatically.</p>
+        </article>
+        <article class="card">
+          <div class="icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="10" r="2.5"/><path d="M8 16.5a4.5 4.5 0 0 1 8 0"/></svg></div>
+          <h3>Roles &amp; audit trail</h3>
+          <p>Admin and staff roles enforced in the business layer, BCrypt passwords, and a log of every login, change and stock movement.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="tour" style="padding-top: 24px">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="kicker">A look inside</div>
+        <h2>Built for the counter and the back office</h2>
+        <p>A clean, modern interface with light and dark themes, colour-coded statuses and search everywhere.</p>
+      </div>
+      <div class="tour">
+        <div class="tabs" role="tablist" aria-label="Screens">
+          <button class="tab" role="tab" aria-selected="true" data-src="/assets/screens/sales-order.webp" data-alt="New sales order with FEFO dispatch suggestion"><strong>New sales order</strong><span>Live FEFO suggestion and GST preview</span></button>
+          <button class="tab" role="tab" aria-selected="false" data-src="/assets/screens/invoices.webp" data-alt="Invoices with paid amounts and balances"><strong>Invoices &amp; payments</strong><span>Paid, partial and balance at a glance</span></button>
+          <button class="tab" role="tab" aria-selected="false" data-src="/assets/screens/batches.webp" data-alt="Batches with expiry status"><strong>Batches &amp; expiry</strong><span>Every batch, colour-coded by expiry</span></button>
+          <button class="tab" role="tab" aria-selected="false" data-src="/assets/screens/alerts.webp" data-alt="Stock alerts"><strong>Stock alerts</strong><span>Low stock, near expiry, expired</span></button>
+          <button class="tab" role="tab" aria-selected="false" data-src="/assets/screens/reports.webp" data-alt="Reports with chart"><strong>Reports</strong><span>12 reports with charts and CSV export</span></button>
+          <button class="tab" role="tab" aria-selected="false" data-src="/assets/screens/batches-dark.webp" data-alt="Batches screen in dark mode"><strong>Dark mode</strong><span>Easy on the eyes after hours</span></button>
+        </div>
+        <div class="tour-shot">
+          <img id="tour-shot" src="/assets/screens/sales-order.webp" width="1424" height="837" loading="lazy" alt="New sales order with FEFO dispatch suggestion">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="get-started" style="padding-top: 24px">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="kicker">Get started</div>
+        <h2>Up and running in two minutes</h2>
+        <p>No database server, no setup wizard. PharmaSync creates its own data file on first start.</p>
+      </div>
+      <div class="steps">
+        <div class="card step"><h3>Install Java 21</h3><p>Any JDK or JRE 21, for example <a href="https://adoptium.net/">Eclipse Temurin</a>.</p></div>
+        <div class="card step"><h3>Download</h3><p>Get <code>pharmasync.jar</code> from the <a href="https://github.com/maneesh17084/PharmaSync/releases/latest">latest release</a>.</p></div>
+        <div class="card step"><h3>Run it</h3><p>Double-click the jar, or run <code>java -jar pharmasync.jar</code>. Choose demo data to explore.</p></div>
+        <div class="card step"><h3>Sign in</h3><p>Use <code>admin</code> / <code>admin123</code>, then pick a new password and enter your company details.</p></div>
+      </div>
+
+      <div style="height: 56px"></div>
+      <div class="cta-band">
+        <img src="/assets/app-icon.png" width="72" height="72" alt="">
+        <div>
+          <h2>Ready to bring your stock in sync?</h2>
+          <p>Free and open source. Your data stays on your own computer.</p>
+        </div>
+        <div class="ctas">
+          <a class="btn btn-primary" href="https://github.com/maneesh17084/PharmaSync/releases/latest/download/pharmasync.jar">Download PharmaSync</a>
+          <a class="btn btn-ghost" href="https://github.com/maneesh17084/PharmaSync#readme">Read the docs</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top: 0">
+    <div class="wrap">
+      <div class="section-head" style="margin-bottom: 24px"><div class="kicker">Built with</div></div>
+      <div class="stack">
+        <span class="chip">Java 21</span><span class="chip">Swing + FlatLaf</span><span class="chip">SQLite</span>
+        <span class="chip">JFreeChart</span><span class="chip">OpenPDF</span><span class="chip">BCrypt</span><span class="chip">JUnit 5</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="/assets/app-icon.png" alt="" width="26" height="26"><span>Pharma<b style="color: var(--teal)">Sync</b></span></a>
+    <span>Wholesale pharmacy inventory &amp; GST billing</span>
+    <nav>
+      <a href="https://github.com/maneesh17084/PharmaSync">GitHub</a>
+      <a href="https://github.com/maneesh17084/PharmaSync/releases">Releases</a>
+      <a href="https://github.com/maneesh17084/PharmaSync/issues">Report an issue</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  // Hero screenshot: light / dark.
+  document.querySelectorAll('[data-shot]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('[data-shot]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      document.getElementById('hero-shot').src = b.dataset.shot === 'dark'
+        ? '/assets/screens/dashboard-dark.webp' : '/assets/screens/dashboard.webp';
+    });
+  });
+  // Screen tour tabs.
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      tabs.forEach(function (x) { x.setAttribute('aria-selected', String(x === t)); });
+      var img = document.getElementById('tour-shot');
+      img.src = t.dataset.src;
+      img.alt = t.dataset.alt;
+    });
+  });
+  // Warm the cache so switching is instant.
+  ['dashboard-dark', 'invoices', 'batches', 'alerts', 'reports', 'batches-dark'].forEach(function (n) {
+    var i = new Image(); i.src = '/assets/screens/' + n + '.webp';
+  });
+</script>
+</body>
+</html>

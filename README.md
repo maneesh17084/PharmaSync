@@ -6,6 +6,26 @@ A desktop application for a wholesale pharmaceutical distributor: medicine maste
 manufacturing/expiry dates, FEFO (First Expiry, First Out) dispatch, supplier purchases, retailer sales with GST
 invoices, low-stock / near-expiry / expired alerts, reports, role-based access and a full audit trail.
 
+**Download:** the latest build is on the [Releases page](https://github.com/maneesh17084/PharmaSync/releases/latest)
+(`pharmasync.jar`, run with `java -jar pharmasync.jar`, Java 21 required).
+
+### Website (Vercel) and releases
+
+PharmaSync is a desktop (Swing) application, so it cannot run on Vercel, which hosts websites. The `public/`
+folder is the product website: features, screenshots, setup steps and a Download button. `vercel.json` tells
+Vercel to serve that folder as a static site with no build step, so the Java project is ignored there. Every push
+to `main` redeploys it.
+
+The Download button points at the latest GitHub Release. To publish a new version, push a tag:
+
+```bat
+git tag v1.0.1
+git push origin v1.0.1
+```
+
+`.github/workflows/release.yml` then builds and tests the app and attaches `pharmasync.jar` to a release for that
+tag. `.github/workflows/build.yml` builds and tests every push to `main`.
+
 ---
 
 ## 1. Running it
